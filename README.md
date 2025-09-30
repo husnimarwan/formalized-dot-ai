@@ -1,16 +1,48 @@
-# React + Vite
+# Formalized
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An AI-powered web application that instantly elevates your writing to a professional standard.
 
-Currently, two official plugins are available:
+![Screenshot of the Formalized app](screenshot.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- **Text Formalization**: Converts informal text into a more professional and polished version using the Gemini API.
+- **Dark Mode**: A sleek and eye-friendly dark mode for comfortable use in any lighting condition.
+- **Character Count**: Keep track of your input and output text length with a real-time character counter.
+- **Copy to Clipboard**: Easily copy the formalized text to your clipboard with a single click.
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Getting Started
 
-## Expanding the ESLint configuration
+### Prerequisites
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Node.js and npm (or yarn) installed on your machine.
+- A Gemini API key. You can get one from the [Google AI for Developers website](https://ai.google.dev).
+
+### Installation
+
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/your-username/formalized-dot-ai.git
+    ```
+2.  Navigate to the project directory:
+    ```bash
+    cd formalized-dot-ai
+    ```
+3.  Install the dependencies:
+    ```bash
+    npm install
+    ```
+4.  Create a `.env` file in the root of the project and add your Gemini API key:
+    ```
+    VITE_GEMINI_API_KEY=your_api_key_here
+    ```
+5.  Start the development server:
+    ```bash
+    npm run dev
+    ```
+
+## Built With
+
+- [React](https://reactjs.org/)
+- [Vite](https://vitejs.dev/)
+- [Google Gemini API](https://ai.google.dev)

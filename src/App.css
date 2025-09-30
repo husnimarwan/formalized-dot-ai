@@ -160,6 +160,16 @@ button {
   transform: translateY(-2px);
 }
 
+.clear-button {
+  background-color: var(--error-color);
+  color: var(--white-color);
+}
+
+.clear-button:hover {
+  background-color: #a72c3a;
+  transform: translateY(-2px);
+}
+
 .char-count {
   font-size: 0.875rem;
   color: var(--secondary-color);

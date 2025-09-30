@@ -37,7 +37,7 @@ TextArea.defaultProps = {
   isOutput: false,
 };
 
-const Buttons = ({ onFormalize, onCopy, disabled, loading }) => (
+const Buttons = ({ onFormalize, onCopy, onClear, disabled, loading }) => (
   <div className="button-group">
     <button onClick={onFormalize} className="formalize-button" disabled={disabled || loading}>
       {loading ? 'Formalizing...' : 'Formalize'}
@@ -45,12 +45,16 @@ const Buttons = ({ onFormalize, onCopy, disabled, loading }) => (
     <button onClick={onCopy} className="copy-button" disabled={!disabled || loading}>
       Copy
     </button>
+    <button onClick={onClear} className="clear-button">
+      Clear
+    </button>
   </div>
 );
 
 Buttons.propTypes = {
   onFormalize: PropTypes.func.isRequired,
   onCopy: PropTypes.func.isRequired,
+  onClear: PropTypes.func.isRequired,
   disabled: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
 };
@@ -109,6 +113,12 @@ ${inputText}`;
     }
   }, [inputText]);
 
+  const handleClear = () => {
+    setInputText('');
+    setOutputText('');
+    setError('');
+  };
+
   const copyToClipboard = useCallback(() => {
     if (!outputText) {
       setError('Nothing to copy.');
@@ -141,6 +151,7 @@ ${inputText}`;
         <Buttons
           onFormalize={formalizeText}
           onCopy={copyToClipboard}
+          onClear={handleClear}
           disabled={!inputText}
           loading={loading}
         />

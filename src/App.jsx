@@ -37,17 +37,19 @@ TextArea.defaultProps = {
   isOutput: false,
 };
 
-const Buttons = ({ onFormalize, onCopy, onClear, disabled, loading }) => (
+const Buttons = ({ onFormalize, onCopy, onClear, isInputEmpty, isOutputEmpty, loading }) => (
   <div className="button-group">
-    <button onClick={onFormalize} className="formalize-button" disabled={disabled || loading}>
+    <button onClick={onFormalize} className="formalize-button" disabled={isInputEmpty || loading}>
       {loading ? 'Formalizing...' : 'Formalize'}
     </button>
-    <button onClick={onCopy} className="copy-button" disabled={!disabled || loading}>
+    <button onClick={onCopy} className="copy-button" disabled={isOutputEmpty || loading}>
       Copy
     </button>
-    <button onClick={onClear} className="clear-button">
-      Clear
-    </button>
+    {(!isInputEmpty || !isOutputEmpty) && (
+      <button onClick={onClear} className="clear-button">
+        Clear
+      </button>
+    )}
   </div>
 );
 
@@ -55,7 +57,8 @@ Buttons.propTypes = {
   onFormalize: PropTypes.func.isRequired,
   onCopy: PropTypes.func.isRequired,
   onClear: PropTypes.func.isRequired,
-  disabled: PropTypes.bool.isRequired,
+  isInputEmpty: PropTypes.bool.isRequired,
+  isOutputEmpty: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
 };
 
@@ -152,7 +155,8 @@ ${inputText}`;
           onFormalize={formalizeText}
           onCopy={copyToClipboard}
           onClear={handleClear}
-          disabled={!inputText}
+          isInputEmpty={!inputText}
+          isOutputEmpty={!outputText}
           loading={loading}
         />
         {error && <p className="error-message">{error}</p>}

@@ -1,3 +1,4 @@
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './App.css';
@@ -36,12 +37,12 @@ TextArea.defaultProps = {
   isOutput: false,
 };
 
-const Buttons = ({ onFormalize, onCopy, disabled }) => (
+const Buttons = ({ onFormalize, onCopy, disabled, loading }) => (
   <div className="button-group">
-    <button onClick={onFormalize} className="formalize-button" disabled={disabled}>
-      Formalize
+    <button onClick={onFormalize} className="formalize-button" disabled={disabled || loading}>
+      {loading ? 'Formalizing...' : 'Formalize'}
     </button>
-    <button onClick={onCopy} className="copy-button" disabled={!disabled}>
+    <button onClick={onCopy} className="copy-button" disabled={!disabled || loading}>
       Copy
     </button>
   </div>
@@ -51,6 +52,7 @@ Buttons.propTypes = {
   onFormalize: PropTypes.func.isRequired,
   onCopy: PropTypes.func.isRequired,
   disabled: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 function App() {
@@ -76,32 +78,35 @@ function App() {
     setInputText(e.target.value);
   };
 
-  const formalizeText = useCallback(() => {
+  const [loading, setLoading] = useState(false);
+
+  const formalizeText = useCallback(async () => {
     if (!inputText.trim()) {
       setError('Input text cannot be empty.');
       return;
     }
-
-    // Placeholder for AI-powered formalization
-    const formalized = inputText
-      .replace(/idk/gi, "I do not know")
-      .replace(/btw/gi, "by the way")
-      .replace(/imo/gi, "in my opinion")
-      .replace(/tldr/gi, "too long; didn't read")
-      .replace(/\b(wanna|gonna|gotta)\b/gi, (match) => {
-        switch (match.toLowerCase()) {
-          case 'wanna': return 'want to';
-          case 'gonna': return 'going to';
-          case 'gotta': return 'got to';
-          default: return match;
-        }
-      })
-      .split('. ')
-      .map(sentence => sentence.charAt(0).toUpperCase() + sentence.slice(1))
-      .join('. ');
-
-    setOutputText(formalized);
+    setLoading(true);
     setError('');
+    setOutputText('');
+
+    try {
+      const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash"});
+
+      const prompt = `Formalize the following text. Do not add any extra information, just the formalized text. For example, if the input is 'idk maybe we should go', the output should be 'I do not know, perhaps we should go.':
+
+${inputText}`;
+
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+      setOutputText(text);
+    } catch (error) {
+      console.error("Error formalizing text:", error);
+      setError('Failed to formalize text. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   }, [inputText]);
 
   const copyToClipboard = useCallback(() => {
@@ -137,6 +142,7 @@ function App() {
           onFormalize={formalizeText}
           onCopy={copyToClipboard}
           disabled={!inputText}
+          loading={loading}
         />
         {error && <p className="error-message">{error}</p>}
       </main>

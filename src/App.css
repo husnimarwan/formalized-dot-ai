@@ -178,9 +178,7 @@ button {
     flex-direction: column;
   }
 
-  .app > .textarea-group:first-of-type { order: 1; }
-  .app > .button-group { order: 2; }
-  .app > .textarea-group:last-of-type { order: 3; }
+
   .app > .error-message { order: 4; }
 
   h1 {
@@ -199,5 +197,13 @@ button {
   .dark-mode-toggle {
     top: 10px;
     right: 10px;
+  }
+
+  .app > .textarea-group:nth-child(1) { order: 1; }
+  .app > .button-group { order: 2; }
+  .app > .textarea-group:nth-child(2) { order: 3; }
+
+  .button-group {
+    margin-top: 0;
   }
 }

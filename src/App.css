@@ -34,7 +34,7 @@ body {
   min-height: 100vh;
   background: var(--background-gradient);
   transition: background 0.3s ease, color 0.3s ease;
-  padding: 0 2rem;
+  padding: 2rem;
   box-sizing: border-box;
 }
 

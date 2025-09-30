@@ -1,21 +1,23 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './App.css';
+import DarkModeToggle from './components/DarkModeToggle';
 
 const Header = () => (
   <header>
     <h1>Formalized</h1>
-    <p>Transform your text into a more professional format.</p>
+    <p>Instantly elevate your writing to a professional standard.</p>
   </header>
 );
 
-const TextArea = ({ id, value, onChange, placeholder, count }) => (
+const TextArea = ({ id, value, onChange, placeholder, count, isOutput }) => (
   <div className="textarea-group">
     <textarea
       id={id}
       value={value}
       onChange={onChange}
       placeholder={placeholder}
+      readOnly={isOutput}
     />
     <div className="char-count">{count} characters</div>
   </div>
@@ -27,6 +29,11 @@ TextArea.propTypes = {
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired,
   count: PropTypes.number.isRequired,
+  isOutput: PropTypes.bool,
+};
+
+TextArea.defaultProps = {
+  isOutput: false,
 };
 
 const Buttons = ({ onFormalize, onCopy, disabled }) => (
@@ -34,7 +41,7 @@ const Buttons = ({ onFormalize, onCopy, disabled }) => (
     <button onClick={onFormalize} className="formalize-button" disabled={disabled}>
       Formalize
     </button>
-    <button onClick={onCopy} className="copy-button" disabled={disabled}>
+    <button onClick={onCopy} className="copy-button" disabled={!disabled}>
       Copy
     </button>
   </div>
@@ -50,6 +57,20 @@ function App() {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
   const [error, setError] = useState('');
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setIsDarkMode(prefersDarkMode);
+  }, []);
+
+  useEffect(() => {
+    document.body.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(prevMode => !prevMode);
+  };
 
   const handleInputChange = (e) => {
     setInputText(e.target.value);
@@ -94,6 +115,7 @@ function App() {
 
   return (
     <div className="container">
+      <DarkModeToggle isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
       <Header />
       <main className="app">
         <TextArea
@@ -103,17 +125,18 @@ function App() {
           placeholder="Enter informal text here..."
           count={inputText.length}
         />
-        <Buttons
-          onFormalize={formalizeText}
-          onCopy={copyToClipboard}
-          disabled={!inputText}
-        />
         <TextArea
           id="output"
           value={outputText}
           onChange={() => {}}
           placeholder="Formalized text will appear here..."
           count={outputText.length}
+          isOutput
+        />
+        <Buttons
+          onFormalize={formalizeText}
+          onCopy={copyToClipboard}
+          disabled={!inputText}
         />
         {error && <p className="error-message">{error}</p>}
       </main>

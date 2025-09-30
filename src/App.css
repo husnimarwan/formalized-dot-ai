@@ -53,6 +53,7 @@ body {
 header {
   text-align: center;
   margin-bottom: 3rem;
+  padding: 0 40px;
 }
 
 h1 {
@@ -135,8 +136,9 @@ button {
 
 .dark-mode-toggle:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--primary-color);
 }
+
+
 
 .formalize-button {
   background-color: var(--primary-color);

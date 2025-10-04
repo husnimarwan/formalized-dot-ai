@@ -105,6 +105,12 @@ textarea {
   color: var(--text-color);
 }
 
+textarea::placeholder {
+  font-style: italic;
+  color: var(--secondary-color);
+  opacity: 0.7;
+}
+
 textarea:focus {
   outline: none;
   border-color: var(--primary-color);
